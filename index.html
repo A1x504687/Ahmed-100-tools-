@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEGA CYBER PLATFORM PRO - ENTERPRISE V2026</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* نظام التصميم الموحد للمؤسسات - ENTERPRISE DESIGN SYSTEM */
+        :root {
+            --primary: #00E5FF;
+            --secondary: #00B8D4;
+            --accent: #00FF88;
+            --bg-main: #050814;
+            --bg-panel: rgba(11, 19, 36, 0.75);
+            --bg-card: rgba(17, 24, 39, 0.85);
+            --border-neon: rgba(0, 229, 255, 0.18);
+            --border-neon-glow: 0 0 10px rgba(0, 229, 255, 0.2);
+            --text-main: #F3F4F6;
+            --text-muted: #9CA3AF;
+            --danger: #FF3131;
+            --warning: #FFBB00;
+            --success: #00FF88;
+            --sidebar-width: 320px;
+            --terminal-bg: #02040a;
+        }
+
+        [data-theme="light"] {
+            --bg-main: #F4F7FC;
+            --bg-panel: rgba(255, 255, 255, 0.9);
+            --bg-card: #FFFFFF;
+            --border-neon: rgba(0, 184, 212, 0.3);
+            --text-main: #111827;
+            --text-muted: #6B7280;
+            --terminal-bg: #1F2937;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            background-image: 
+                linear-gradient(var(--border-neon) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-neon) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        /* تخصيص شريط التمرير السيبراني */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+
+        /* الشاشات التفاعلية وأدوات التحميل */
+        #global-cyber-loader {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #050814; z-index: 10000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .matrix-spinner {
+            width: 60px; height: 60px; border: 4px solid transparent;
+            border-top-color: var(--primary); border-bottom-color: var(--accent);
+            border-radius: 50%; animation: rotateMatrix 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+        @keyframes rotateMatrix { to { transform: rotate(360deg); } }
+
+        /* الهيكل الأساسي للتطبيق (App Wrapper) */
+        #app-core-container { display: none; width: 100%; min-height: 100vh; display: flex; }
+
+        /* شريط الملاحة الجانبي المطور متعدد المستويات */
+        .cyber-sidebar {
+            width: var(--sidebar-width); background: var(--bg-panel);
+            border-left: 1px solid var(--border-neon); height: 100vh;
+            position: fixed; right: 0; top: 0; z-index: 1000;
+            display: flex; flex-direction: column; backdrop-filter: blur(20px);
+            box-shadow: var(--border-neon-glow);
+        }
+
+        .sidebar-brand {
+            padding: 25px 20px; border-bottom: 1px solid var(--border-neon);
+            font-family: 'Share Tech Mono', sans-serif; font-size: 1.25rem;
+            color: var(--primary); text-shadow: 0 0 8px var(--primary);
+            display: flex; align-items: center; gap: 12px;
+        }
+
+        .sidebar-search-box { padding: 15px; border-bottom: 1px solid var(--border-neon); }
+        .sidebar-search-box input {
+            width: 100%; padding: 10px 14px; background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-neon); color: #FFF; border-radius: 4px; outline: none;
+            font-size: 0.85rem;
+        }
+
+        .menu-container { flex: 1; overflow-y: auto; padding: 10px; }
+        .suite-category {
+            color: var(--text-muted); font-size: 0.75rem; font-weight: 700;
+            padding: 12px 10px 6px 0; text-transform: uppercase; letter-spacing: 1px;
+            display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer;
+        }
+        .suite-category:hover { color: var(--primary); }
+
+        .suite-items-group { display: none; flex-direction: column; margin-bottom: 8px; }
+        .suite-items-group.expanded { display: flex; }
+
+        .nav-tool-link {
+            display: flex; align-items: center; padding: 8px 12px; color: var(--text-main);
+            text-decoration: none; border-radius: 4px; margin-bottom: 2px; font-size: 0.85rem;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .nav-tool-link i { width: 18px; margin-left: 8px; color: var(--primary); font-size: 0.9rem; }
+        .nav-tool-link:hover, .nav-tool-link.active-tool {
+            background: rgba(0, 229, 255, 0.08); color: #FFF; border-right: 3px solid var(--primary);
+        }
+
+        /* إطار محتوى العمليات الرئيسي */
+        .workspace-frame { margin-right: var(--sidebar-width); flex: 1; padding: 30px; display: flex; flex-direction: column; }
+        
+        .workspace-header {
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--bg-card); padding: 16px 24px; border-radius: 6px;
+            border: 1px solid var(--border-neon); margin-bottom: 25px; box-shadow: var(--border-neon-glow);
+        }
+        .breadcrumb-nav { font-size: 0.9rem; color: var(--text-muted); display: flex; gap: 8px; align-items: center; }
+        .breadcrumb-nav span.current { color: var(--primary); font-weight: 600; }
+
+        /* مكونات البطاقات والواجهات السيبرانية */
+        .enterprise-card {
+            background: var(--bg-card); border: 1px solid var(--border-neon);
+            border-radius: 8px; padding: 24px; margin-bottom: 25px;
+            backdrop-filter: blur(12px); position: relative; overflow: hidden;
+            box-shadow: var(--border-neon-glow);
+        }
+        .enterprise-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary);
+        }
+        .enterprise-card.danger-card::before { background: var(--danger); }
+        .enterprise-card.success-card::before { background: var(--success); }
+
+        .tool-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; color: #FFF; }
+        [data-theme="light"] .tool-title { color: var(--text-main); }
+
+        /* أدوات النمذجة الاستمارات والمحاكيات */
+        .form-label { display: block; margin-bottom: 6px; font-size: 0.88rem; color: var(--text-muted); font-weight: 500; }
+        .cyber-input {
+            width: 100%; padding: 12px 16px; background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-neon); color: #FFF; border-radius: 6px;
+            font-size: 0.95rem; outline: none; margin-bottom: 15px; font-family: 'Fira Code', monospace;
+        }
+        [data-theme="light"] .cyber-input { background: #FFF; color: #000; }
+        .cyber-input:focus { border-color: var(--primary); box-shadow: 0 0 12px rgba(0, 229, 255, 0.3); }
+
+        .btn-cyber-action {
+            background: transparent; border: 1px solid var(--primary); color: var(--primary);
+            padding: 10px 22px; font-weight: 600; border-radius: 4px; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem;
+            transition: all 0.3s; text-shadow: 0 0 5px var(--primary);
+        }
+        .btn-cyber-action:hover { background: var(--primary); color: #050814; box-shadow: 0 0 15px var(--primary); }
+
+        /* مشغلات الكود ومخرجات التحليل (Terminals) */
+        .cyber-terminal {
+            background: var(--terminal-bg); border: 1px solid rgba(0, 229, 255, 0.15);
+            font-family: 'Fira Code', 'Share Tech Mono', monospace; padding: 20px; border-radius: 6px;
+            color: var(--accent); white-space: pre-wrap; margin-top: 15px; max-height: 450px; overflow-y: auto;
+            font-size: 0.9rem; line-height: 1.5; direction: ltr; text-align: left;
+        }
+
+        /* التنسيقات الشبكية المتجاوبة */
+        .cyber-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .cyber-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .cyber-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+
+        /* شاشات الأنظمة والمجموعات (Views Container) */
+        .cyber-view-panel { display: none; animation: panelSlideIn 0.35s ease-out forwards; }
+        .cyber-view-panel.active-view { display: block; }
+        @keyframes panelSlideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* نظام التنبيهات المنبثقة الدائم */
+        #cyber-toast-center { position: fixed; bottom: 20px; left: 20px; z-index: 11000; display: flex; flex-direction: column; gap: 10px; }
+        .cyber-toast {
+            background: var(--bg-card); border-right: 4px solid var(--primary); padding: 14px 24px;
+            border-radius: 4px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); color: var(--text-main);
+            font-size: 0.9rem; font-weight: 500; min-width: 300px; display: flex; align-items: center; gap: 12px;
+            animation: toastIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes toastIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div id="global-cyber-loader">
+        <div class="matrix-spinner"></div>
+        <p style="margin-top: 20px; color: var(--primary); font-family: 'Share Tech Mono'; letter-spacing: 2px; font-size: 0.95rem;">LOADING MEGA PLATFORM ENGINE ES2026 v2.0...</p>
+    </div>
+
+    <div id="cyber-toast-center"></div>
+
+    <div id="app-core-container">
+        
+        <aside class="cyber-sidebar">
+            <div class="sidebar-brand">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>CYBER PLATFORM PRO</span>
+            </div>
+            <div class="sidebar-search-box">
+                <input type="text" id="globalToolSearch" placeholder="البحث السريع في الـ 100 أداة..." oninput="CyberRouter.filterTools()">
+            </div>
+            <div class="menu-container" id="sidebarMenuAnchor">
+                </div>
+        </aside>
+
+        <main class="workspace-frame">
+            <header class="workspace-header">
+                <div class="breadcrumb-nav">
+                    <i class="fa-solid fa-house-laptop"></i>
+                    <span>المنصة الرئيسية</span> / 
+                    <span id="parent-suite-breadcrumb">Threat Intelligence</span> / 
+                    <span id="current-tool-breadcrumb" class="current">Dashboard</span>
+                </div>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <button class="btn-cyber-action" style="padding: 6px 14px; font-size: 0.8rem;" onclick="CyberRouter.toggleGlobalTheme()">
+                        <i class="fa-solid fa-circle-half-stroke"></i> مظهر هجين
+                    </button>
+                    <div style="background: rgba(0,229,255,0.08); padding: 6px 14px; border: 1px solid var(--border-neon); border-radius: 4px; font-family: 'Share Tech Mono'; font-size: 0.85rem;">
+                        SEC-LEVEL: <span style="color: var(--accent);" id="session-role">ADMIN_CLEARANCE</span>
+                    </div>
+                </div>
+            </header>
+
+            <div id="views-root-container">
+                </div>
+        </main>
+    </div>
+
+    <script>
+        /**
+         * MEGA ENTERPRISE CYBER PLATFORM ENGINE (ES2026 SYSTEM)
+         * CORE NAVIGATION & SPA ROUTING INFRASTRUCTURE
+         */
+        
+        // نظام الإشعارات الفوري الذكي
+        const CyberNotify = {
+            trigger(msg, type = 'info') {
+                const center = document.getElementById('cyber-toast-center');
+                const toast = document.createElement('div');
+                toast.className = 'cyber-toast';
+                if(type === 'danger') toast.style.borderRightColor = 'var(--danger)';
+                if(type === 'success') toast.style.borderRightColor = 'var(--success)';
+                if(type === 'warning') toast.style.borderRightColor = 'var(--warning)';
+                
+                toast.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <span>${msg}</span>`;
+                center.appendChild(toast);
+                setTimeout(() => { toast.remove(); }, 4000);
+            }
+        };
+
+        // تعريف المجموعات والمكونات المائة بالكامل (Data Schema Definition)
+        const CyberSuitesDefinition = {
+            threat_intel: {
+                title: "Threat Intelligence Suite",
+                icon: "fa-spider",
+                tools: [
+                    { id: "ti-ioc-lookup", title: "1. IOC Lookup" },
+                    { id: "ti-ioc-correlation", title: "2. IOC Correlation" },
+                    { id: "ti-ioc-repo", title: "3. IOC Repository" },
+                    { id: "ti-ioc-class", title: "4. IOC Classification" },
+                    { id: "ti-actor-db", title: "5. Threat Actor Database" },
+                    { id: "ti-campaign-map", title: "6. Campaign Mapping" },
+                    { id: "ti-ttp-analysis", title: "7. TTP Analysis" },
+                    { id: "ti-attack-nav", title: "8. ATT&CK Navigator" },
+                    { id: "ti-feed", title: "9. Threat Feed" },
+                    { id: "ti-dashboard", title: "10. Intelligence Dashboard" }
+                ]
+            },
+            dfir: {
+                title: "DFIR Suite",
+                icon: "fa-fingerprint",
+                tools: [
+                    { id: "dfir-evidence-track", title: "11. Evidence Tracker" },
+                    { id: "dfir-timeline-build", title: "12. Timeline Builder" },
+                    { id: "dfir-artifact-view", title: "13. Artifact Viewer" },
+                    { id: "dfir-case-manage", title: "14. Case Management" },
+                    { id: "dfir-mem-sim", title: "15. Memory Analysis Simulator" },
+                    { id: "dfir-disk-sim", title: "16. Disk Analysis Simulator" },
+                    { id: "dfir-file-timeline", title: "17. File Timeline" },
+                    { id: "dfir-evidence-chain", title: "18. Evidence Chain" },
+                    { id: "dfir-notes", title: "19. Investigation Notes" },
+                    { id: "dfir-reports", title: "20. Forensics Reports" }
+                ]
+            },
+            soc: {
+                title: "SOC Suite",
+                icon: "fa-gauge-high",
+                tools: [
+                    { id: "soc-alert-dash", title: "21. Alert Dashboard" },
+                    { id: "soc-incident-queue", title: "22. Incident Queue" },
+                    { id: "soc-event-view", title: "23. Event Viewer" },
+                    { id: "soc-corr-engine", title: "24. Correlation Engine" },
+                    { id: "soc-prioritization", title: "25. Alert Prioritization" },
+                    { id: "soc-workspace", title: "26. Analyst Workspace" },
+                    { id: "soc-escalation", title: "27. Escalation Queue" },
+                    { id: "soc-timeline", title: "28. Incident Timeline" },
+                    { id: "soc-alert-stats", title: "29. Alert Statistics" },
+                    { id: "soc-metrics", title: "30. SOC Metrics" }
+                ]
+            },
+            siem: {
+                title: "SIEM Suite",
+                icon: "fa-terminal",
+                tools: [
+                    { id: "siem-collection", title: "31. Event Collection" },
+                    { id: "siem-parsing", title: "32. Log Parsing" },
+                    { id: "siem-rule-manage", title: "33. Rule Management" },
+                    { id: "siem-det-rules", title: "34. Detection Rules" },
+                    { id: "siem-corr-rules", title: "35. Correlation Rules" },
+                    { id: "siem-alert-engine", title: "36. Alert Engine" },
+                    { id: "siem-analytics", title: "37. Dashboard Analytics" },
+                    { id: "siem-timeline", title: "38. Event Timeline" },
+                    { id: "siem-threat-det", title: "39. Threat Detection" },
+                    { id: "siem-explorer", title: "40. Log Explorer" }
+                ]
+            },
+            vuln_intel: {
+                title: "Vulnerability Intelligence",
+                icon: "fa-bug",
+                tools: [
+                    { id: "vuln-cve-search", title: "41. CVE Search" },
+                    { id: "vuln-cvss-calc", title: "42. CVSS Calculator" },
+                    { id: "vuln-explorer", title: "43. Vulnerability Explorer" },
+                    { id: "vuln-cwe-exp", title: "44. CWE Explorer" },
+                    { id: "vuln-capec-exp", title: "45. CAPEC Explorer" },
+                    { id: "vuln-matrix", title: "46. Severity Matrix" },
+                    { id: "vuln-reports", title: "47. Vulnerability Reports" },
+                    { id: "vuln-risk-dash", title: "48. Risk Dashboard" },
+                    { id: "vuln-patch-track", title: "49. Patch Tracking" },
+                    { id: "vuln-mitigation", title: "50. Mitigation Library" }
+                ]
+            },
+            malware: {
+                title: "Malware Research",
+                icon: "fa-virus-slash",
+                tools: [
+                    { id: "mal-hash-ana", title: "51. Hash Analyzer" },
+                    { id: "mal-static", title: "52. Static Analysis" },
+                    { id: "mal-strings", title: "53. Strings Analyzer" },
+                    { id: "mal-import", title: "54. Import Analyzer" },
+                    { id: "mal-entropy", title: "55. Entropy Viewer" },
+                    { id: "mal-pe-insp", title: "56. PE Inspector" },
+                    { id: "mal-reputation", title: "57. File Reputation" },
+                    { id: "mal-kb", title: "58. Malware Knowledge Base" },
+                    { id: "mal-families", title: "59. Malware Families" },
+                    { id: "mal-workspace", title: "60. Research Workspace" }
+                ]
+            },
+            osint: {
+                title: "OSINT Center",
+                icon: "fa-magnifying-glass-nodes",
+                tools: [
+                    { id: "osint-user", title: "61. Username Analyzer" },
+                    { id: "osint-email", title: "62. Email Analyzer" },
+                    { id: "osint-domain", title: "63. Domain Viewer" },
+                    { id: "osint-meta", title: "64. Metadata Viewer" },
+                    { id: "osint-dns", title: "65. DNS Viewer" },
+                    { id: "osint-whois", title: "66. WHOIS Viewer" },
+                    { id: "osint-work", title: "67. Search Workspace" },
+                    { id: "osint-board", title: "68. Investigation Board" },
+                    { id: "osint-link", title: "69. Link Analysis" },
+                    { id: "osint-corr", title: "70. Data Correlation" }
+                ]
+            },
+            network: {
+                title: "Network Security",
+                icon: "fa-network-wired",
+                tools: [
+                    { id: "net-cidr", title: "71. CIDR Calculator" },
+                    { id: "net-ip", title: "72. IP Calculator" },
+                    { id: "net-subnet", title: "73. Subnet Designer" },
+                    { id: "net-map", title: "74. Network Map" },
+                    { id: "net-dns", title: "75. DNS Health" },
+                    { id: "net-tls", title: "76. TLS Inspector" },
+                    { id: "net-headers", title: "77. Security Headers" },
+                    { id: "net-cert", title: "78. Certificate Viewer" },
+                    { id: "net-traffic", title: "79. Traffic Simulator" },
+                    { id: "net-dash", title: "80. Network Dashboard" }
+                ]
+            },
+            crypto: {
+                title: "Cryptography",
+                icon: "fa-key",
+                tools: [
+                    { id: "cry-md5", title: "81. MD5" },
+                    { id: "cry-sha1", title: "82. SHA1" },
+                    { id: "cry-sha256", title: "83. SHA256" },
+                    { id: "cry-sha512", title: "84. SHA512" },
+                    { id: "cry-hmac", title: "85. HMAC" },
+                    { id: "cry-b64", title: "86. Base64" },
+                    { id: "cry-urle", title: "87. URL Encode" },
+                    { id: "cry-urld", title: "88. URL Decode" },
+                    { id: "cry-rot13", title: "89. ROT13" },
+                    { id: "cry-entropy", title: "90. Entropy Calculator" }
+                ]
+            },
+            grc: {
+                title: "Governance Risk Compliance",
+                icon: "fa-building-shield",
+                tools: [
+                    { id: "grc-iso", title: "91. ISO 27001" },
+                    { id: "grc-nist", title: "92. NIST" },
+                    { id: "grc-cis", title: "93. CIS Controls" },
+                    { id: "grc-soc2", title: "94. SOC2" },
+                    { id: "grc-gdpr", title: "95. GDPR" },
+                    { id: "grc-risk", title: "96. Risk Register" },
+                    { id: "grc-map", title: "97. Control Mapping" },
+                    { id: "grc-reports", title: "98. Compliance Reports" },
+                    { id: "grc-audit", title: "99. Audit Dashboard" },
+                    { id: "grc-policies", title: "100. Security Policies" }
+                ]
+            }
+        };
+
+        // محرك الملاحة والتوجيه الديناميكي الموحد (SPA Router)
+        const CyberRouter = {
+            currentTheme: 'dark',
+
+            renderSidebar() {
+                const anchor = document.getElementById('sidebarMenuAnchor');
+                anchor.innerHTML = '';
+                
+                for (const [key, suite] of Object.entries(CyberSuitesDefinition)) {
+                    const categoryEl = document.createElement('div');
+                    categoryEl.className = 'suite-category';
+                    categoryEl.innerHTML = `<span><i class="fa-solid ${suite.icon}"></i> ${suite.title}</span> <i class="fa-solid fa-chevron-down" style="font-size:0.7rem;"></i>`;
+                    categoryEl.onclick = () => this.toggleCategory(key);
+                    
+                    const groupEl = document.createElement('div');
+                    groupEl.id = `group-${key}`;
+                    groupEl.className = 'suite-items-group';
+                    
+                    suite.tools.forEach(tool => {
+                        const link = document.createElement('div');
+                        link.className = 'nav-tool-link';
+                        link.id = `nav-${tool.id}`;
+                        link.innerHTML = `<i class="fa-solid fa-cube"></i> ${tool.title}`;
+                        link.onclick = () => this.loadToolWorkspace(key, tool.id, tool.title);
+                        groupEl.appendChild(link);
+                    });
+                    
+                    anchor.appendChild(categoryEl);
+                    anchor.appendChild(groupEl);
+                }
+            },
+
+            toggleCategory(key) {
+                const group = document.getElementById(`group-${key}`);
+                group.classList.toggle('expanded');
+            },
+
+            filterTools() {
+                const query = document.getElementById('globalToolSearch').value.toLowerCase();
+                document.querySelectorAll('.nav-tool-link').forEach(link => {
+                    if(link.textContent.toLowerCase().includes(query)) {
+                        link.style.display = 'flex';
+                        link.parentElement.classList.add('expanded');
+                    } else {
+                        link.style.display = 'none';
+                    }
+                });
+            },
+
+            toggleGlobalTheme() {
+                this.currentTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+                document.body.setAttribute('data-theme', this.currentTheme);
+                CyberNotify.trigger(`تم تغيير مظهر الواجهة إلى النمط: ${this.currentTheme.toUpperCase()}`);
+            },
+
+            loadToolWorkspace(suiteKey, toolId, toolTitle) {
+                document.querySelectorAll('.nav-tool-link').forEach(l => l.classList.remove('active-tool'));
+                const activeNav = document.getElementById(`nav-${toolId}`);
+                if(activeNav) activeNav.classList.add('active-tool');
+
+                document.getElementById('parent-suite-breadcrumb').innerText = CyberSuitesDefinition[suiteKey].title;
+                document.getElementById('current-tool-breadcrumb').innerText = toolTitle;
+
+                // تحديث العرض وإخفاء الواجهات القديمة
+                document.querySelectorAll('.cyber-view-panel').forEach(v => v.classList.remove('active-view'));
+                
+                let targetView = document.getElementById(`view-${toolId}`);
+                if(!targetView) {
+                    // إذا لم تكن الواجهة محقونة بعد، يتم بناؤها فوراً من النواة والمحرك
+                    targetView = document.createElement('div');
+                    targetView.id = `view-${toolId}`;
+                    targetView.className = 'cyber-view-panel';
+                    document.getElementById('views-root-container').appendChild(targetView);
+                    
+                    // استدعاء محرك توليد واجهات الأدوات
+                    CyberViewsFactory.build(toolId, targetView);
+                }
+                
+                targetView.classList.add('active-view');
+                CyberNotify.trigger(`تم تحميل الأداة بنجاح: ${toolTitle}`, 'success');
+            }
+        };
+
+        // عند اكتمال الـ DOM الأساسي، نقوم بالتشغيل الأولي
+        document.addEventListener('DOMContentLoaded', () => {
+            CyberRouter.renderSidebar();
+            setTimeout(() => {
+                document.getElementById('global-cyber-loader').style.display = 'none';
+                document.getElementById('app-core-container').style.display = 'flex';
+                // فتح وعرض لوحة التحكم الاستخباراتية الأولى افتراضياً
+                CyberRouter.toggleCategory('threat_intel');
+                CyberRouter.loadToolWorkspace('threat_intel', 'ti-dashboard', '10. Intelligence Dashboard');
+            }, 1000);
+        });
+    </script>
+    <script>
+    /**
+     * CYBER VIEWS FACTORY & ENGINE
+     * يحتوي على كود الإنتاج الجاهز للـ 100 أداة تفاعلية مستقلة.
+     */
+    const CyberViewsFactory = {
+        build(id, container) {
+            switch(id) {
+                // ==========================================
+                // THREAT INTELLIGENCE SUITE (1 - 10)
+                // ==========================================
+                case 'ti-ioc-lookup':
+                    container.innerHTML = `
+                        <div class="enterprise-card">
+                            <div class="tool-title"><i class="fa-solid fa-search"></i> 1. IOC Lookup Engine</div>
+                            <p class="form-label">أدخل مؤشرات الاختراق (IP, Domain, MD5/SHA256 Hash) للتحقق الفوري منها عبر قواعد بيانات المحاكاة المدمجة:</p>
+                            <input type="text" id="input-ioc-lookup" class="cyber-input" placeholder="e.g., 198.51.100.45, maldoc.exe, 4a8a892b...">
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('ti-ioc-lookup')"><i class="fa-solid fa-microchip"></i> فحص السمعة السيبرانية</button>
+                            <div id="out-ti-ioc-lookup" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'ti-ioc-correlation':
+                    container.innerHTML = `
+                        <div class="enterprise-card">
+                            <div class="tool-title"><i class="fa-solid fa-diagram-project"></i> 2. IOC Correlation Matrix</div>
+                            <p class="form-label">قم بلصق مجموعة من الـ IOCs دفعة واحدة لاستخراج الروابط الخفية وحملات الاستهداف المشتركة:</p>
+                            <textarea id="input-ioc-corr" class="cyber-input" rows="4" placeholder="185.220.101.5&#10;ccserver.net&#10;5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"></textarea>
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('ti-ioc-correlation')"><i class="fa-solid fa-circle-nodes"></i> إجراء تحليل الارتباط</button>
+                            <div id="out-ti-ioc-correlation" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'ti-ioc-repo':
+                    container.innerHTML = `
+                        <div class="enterprise-card">
+                            <div class="tool-title"><i class="fa-solid fa-database"></i> 3. Enterprise IOC Repository</div>
+                            <p class="form-label">مستودع الأصول الخبيثة المخزنة محلياً في ذاكرة المنصة التكتيكية:</p>
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('ti-ioc-repo')"><i class="fa-solid fa-download"></i> تحديث وجلب المستودع الشامل</button>
+                            <div id="out-ti-ioc-repo" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'ti-ioc-class':
+                    container.innerHTML = `
+                        <div class="enterprise-card">
+                            <div class="tool-title"><i class="fa-solid fa-tags"></i> 4. IOC Classification & Tagging</div>
+                            <p class="form-label">تصنيف الـ IOC بناءً على خطورته ونوع التهديد المستخرج:</p>
+                            <input type="text" id="input-ioc-class" class="cyber-input" placeholder="أدخل مؤشر الاختراق هنا...">
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('ti-ioc-class')"><i class="fa-solid fa-filter"></i> تطبيق مصنف الخطورة</button>
+                            <div id="out-ti-ioc-class" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'ti-actor-db':
+                    container.innerHTML = `
+                        <div class="enterprise-card danger-card">
+                            <div class="tool-title"><i class="fa-solid fa-user-secret"></i> 5. Advanced Threat Actor Database</div>
+                            <p class="form-label">قاعدة بيانات مجموعات التهديد المتقدمة المستمرة (APT Groups):</p>
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('ti-actor-db')"><i class="fa-solid fa-eye"></i> استعراض خريطة مجموعات الـ APT المحدثة</button>
+                            <div id="out-ti-actor-db" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'ti-campaign-map':
+                    container.innerHTML = `
+                        <div class="enterprise-card">
+                            <div class="tool-title"><i class="fa-solid fa-map-location-dot"></i> 6. Cyber Campaign Mapping</div>
+                            <p class="form-label">ربط الهجمات الحالية بالحملات المنظمة العالمية:</p>
+                            <input type="text" id="input-campaign" class="cyber-input" placeholder="اسم الحملة أو القطاع المستهدف...">
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('ti-campaign-map')"><i class="fa-solid fa-route"></i> توليد مخطط الحملة</button>
+                            <div id="out-ti-campaign-map" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'ti-ttp-analysis':
+                    container.innerHTML = `
+                        <div class="enterprise-card">
+                            <div class="tool-title"><i class="fa-solid fa-crosshairs"></i> 7. TTP Analysis (Tactics, Techniques, Procedures)</div>
+                            <p class="form-label">تحليل السلوك العملياتي للمهاجمين:</p>
+                            <textarea id="input-ttp" class="cyber-input" rows="3" placeholder="أدخل السلوك المرصود أو الأوامر المنفذة..."></textarea>
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('ti-ttp-analysis')"><i class="fa-solid fa-brain"></i> فحص الأنماط الإجرائية</button>
+                            <div id="out-ti-ttp-analysis" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'ti-attack-nav':
+                    container.innerHTML = `
+                        <div class="enterprise-card">
+                            <div class="tool-title"><i class="fa-solid fa-network-wired"></i> 8. MITRE ATT&CK Enterprise Navigator</div>
+                            <p class="form-label">إسقاط فوري لمصفوفة MITRE وتحليل الفجوات الدفاعية:</p>
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('ti-attack-nav')"><i class="fa-solid fa-compass"></i> تشغيل خريطة التنقل الذكية</button>
+                            <div id="out-ti-attack-nav" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'ti-feed':
+                    container.innerHTML = `
+                        <div class="enterprise-card">
+                            <div class="tool-title"><i class="fa-solid fa-rss"></i> 9. Live Threat Intelligence Feed</div>
+                            <p class="form-label">تغذية حية للتهديدات المستمرة المستخرجة في الوقت الفعلي داخل بيئة المتصفح:</p>
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('ti-feed')"><i class="fa-solid fa-sync"></i> سحب التحديثات الاستخباراتية</button>
+                            <div id="out-ti-feed" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'ti-dashboard':
+                    container.innerHTML = `
+                        <div class="cyber-grid-3">
+                            <div class="enterprise-card" style="text-align:center;">
+                                <div class="form-label">Global Threat Alert Level</div>
+                                <div style="font-size:2rem; color:var(--danger); font-family:'Share Tech Mono';">CRITICAL</div>
+                            </div>
+                            <div class="enterprise-card" style="text-align:center;">
+                                <div class="form-label">Monitored Actors</div>
+                                <div style="font-size:2rem; color:var(--primary); font-family:'Share Tech Mono';">142 Active</div>
+                            </div>
+                            <div class="enterprise-card" style="text-align:center;">
+                                <div class="form-label">IOCs in Feed</div>
+                                <div style="font-size:2rem; color:var(--accent); font-family:'Share Tech Mono';">84,920</div>
+                            </div>
+                        </div>
+                        <div class="enterprise-card">
+                            <div class="tool-title"><i class="fa-solid fa-chart-line"></i> 10. Intelligence Center Main Dashboard</div>
+                            <div style="max-height:300px;"><canvas id="tiMainChart"></canvas></div>
+                        </div>`;
+                    // بناء الرسم البياني فورياً عند الاستدعاء
+                    setTimeout(() => {
+                        const ctx = document.getElementById('tiMainChart').getContext('2d');
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+                                datasets: [{
+                                    label: 'ملفات الاستخبارات المعالجة اليوم',
+                                    data: [420, 510, 380, 720, 910, 1150],
+                                    borderColor: '#00E5FF',
+                                    backgroundColor: 'rgba(0, 225, 255, 0.05)',
+                                    fill: true
+                                }]
+                            },
+                            options: { responsive: true, maintainAspectRatio: false }
+                        });
+                    }, 100);
+                    break;
+
+                // ==========================================
+                // DFIR SUITE (11 - 20)
+                // ==========================================
+                case 'dfir-evidence-track':
+                    container.innerHTML = `
+                        <div class="enterprise-card success-card">
+                            <div class="tool-title"><i class="fa-solid fa-folder-closed"></i> 11. Forensic Evidence Tracker</div>
+                            <p class="form-label">تسجيل وتتبع حيازة الأدلة الجنائية الرقمية وضمان عدم العبث بها:</p>
+                            <input type="text" id="input-ev-id" class="cyber-input" placeholder="رقم الدليل الفرعي (e.g., EV-2026-009)">
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('dfir-evidence-track')"><i class="fa-solid fa-plus"></i> التحقق من سلامة الدليل وحفظه</button>
+                            <div id="out-dfir-evidence-track" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'dfir-timeline-build':
+                    container.innerHTML = `
+                        <div class="enterprise-card">
+                            <div class="tool-title"><i class="fa-solid fa-timeline"></i> 12. Forensic Timeline Builder</div>
+                            <p class="form-label">إعادة بناء الجدول الزمني للحوادث الرقمية بناء على السجلات الجنائية المدمجة:</p>
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('dfir-timeline-build')"><i class="fa-solid fa-clock"></i> توليد الجدول الزمني الشامل</button>
+                            <div id="out-dfir-timeline-build" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'dfir-artifact-view':
+                    container.innerHTML = `
+                        <div class="enterprise-card">
+                            <div class="tool-title"><i class="fa-solid fa-microscope"></i> 13. Digital Artifact Viewer</div>
+                            <p class="form-label">تحليل الآثار المتروكة في النظام (Windows Registry, MFT, Amcache):</p>
+                            <input type="text" id="input-artifact" class="cyber-input" placeholder="اسم الأثر أو مسار الملف...">
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('dfir-artifact-view')"><i class="fa-solid fa-magnifying-glass"></i> استخراج وتحليل الآثار</button>
+                            <div id="out-dfir-artifact-view" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'dfir-case-manage':
+                    container.innerHTML = `
+                        <div class="enterprise-card">
+                            <div class="tool-title"><i class="fa-solid fa-briefcase"></i> 14. Forensic Case Management UI</div>
+                            <p class="form-label">إدارة القضايا الجنائية السيبرانية المفتوحة وحالات التحقيق الحالية:</p>
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('dfir-case-manage')"><i class="fa-solid fa-list-check"></i> جلب الحالات والقضايا النشطة</button>
+                            <div id="out-dfir-case-manage" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'dfir-mem-sim':
+                    container.innerHTML = `
+                        <div class="enterprise-card danger-card">
+                            <div class="tool-title"><i class="fa-solid fa-memory"></i> 15. Memory Analysis Simulator (Volatility Core)</div>
+                            <p class="form-label">محاكاة فحص وتدقيق صور الذاكرة العشوائية RAM لاستخراج البرمجيات الخبيثة المخفية:</p>
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('dfir-mem-sim')"><i class="fa-solid fa-terminal"></i> تشغيل أمر volatility -f mem.raw pslist</button>
+                            <div id="out-dfir-mem-sim" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'dfir-disk-sim':
+                    container.innerHTML = `
+                        <div class="enterprise-card">
+                            <div class="tool-title"><i class="fa-solid fa-hard-drive"></i> 16. Disk Analysis & Carving Simulator</div>
+                            <p class="form-label">محاكاة استرجاع الملفات المحذوفة وفحص صور الأقراص الصلبة الجنائية:</p>
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('dfir-disk-sim')"><i class="fa-solid fa-wrench"></i> فحص البنية الهيكلية للقرص المحاكى</button>
+                            <div id="out-dfir-disk-sim" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'dfir-file-timeline':
+                    container.innerHTML = `
+                        <div class="enterprise-card">
+                            <div class="tool-title"><i class="fa-solid fa-file-medical"></i> 17. MACB File Timeline Analyzer</div>
+                            <p class="form-label">تحليل تواريخ تعديل، إنشاء، والوصول للملفات (Modified, Accessed, Created, Born):</p>
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('dfir-file-timeline')"><i class="fa-solid fa-calendar-days"></i> توليد تسلسل MACB</button>
+                            <div id="out-dfir-file-timeline" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'dfir-evidence-chain':
+                    container.innerHTML = `
+                        <div class="enterprise-card">
+                            <div class="tool-title"><i class="fa-solid fa-link"></i> 18. Chain of Custody Validator</div>
+                            <p class="form-label">التحقق من سلامة سلسلة الحيازة للأدلة لضمان قبولها القانوني والمخبري:</p>
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('dfir-evidence-chain')"><i class="fa-solid fa-signature"></i> فحص التواقيع الرقمية للأدلة</button>
+                            <div id="out-dfir-evidence-chain" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'dfir-notes':
+                    container.innerHTML = `
+                        <div class="enterprise-card">
+                            <div class="tool-title"><i class="fa-solid fa-note-sticky"></i> 19. Investigation Notes Lab</div>
+                            <p class="form-label">صندوق تدوين ملاحظات المحقق الجنائي وتوثيق النتائج الأولية:</p>
+                            <textarea id="txt-dfir-notes" class="cyber-input" rows="4" placeholder="اكتب ملاحظاتك التحقيقية الفورية هنا..."></textarea>
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('dfir-notes')"><i class="fa-solid fa-floppy-disk"></i> تسجيل وتشفير الملاحظات محلياً</button>
+                            <div id="out-dfir-notes" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+                case 'dfir-reports':
+                    container.innerHTML = `
+                        <div class="enterprise-card">
+                            <div class="tool-title"><i class="fa-solid fa-file-pdf"></i> 20. Automated Forensics Report Generator</div>
+                            <p class="form-label">توليد التقرير النهائي المعتمد للجهات القانونية والإدارية العليا للحادثة الرقمية:</p>
+                            <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('dfir-reports')"><i class="fa-solid fa-gavel"></i> تصدير التقرير الفني الشامل</button>
+                            <div id="out-dfir-reports" class="cyber-terminal" style="display:none;"></div>
+                        </div>`;
+                    break;
+
+                default:
+                    // استدعاء محرك الحقن التلقائي لبقية الأدوات الـ 100 لضمان ملء الملف كاملاً بدون اختصار
+                    CyberViewsFactory.buildExtended(id, container);
+                    break;
+            }
+        },
+        exec(id) {
+            const out = document.getElementById(`out-${id}`);
+            if(out) out.style.display = 'block';
+
+            const timestamp = new Date().toISOString();
+
+            switch(id) {
+                // مخرجات جناح الاستخبارات
+                case 'ti-ioc-lookup':
+                    const ioc = document.getElementById('input-ioc-lookup').value || "185.220.101.5";
+                    out.innerHTML = `[+] [${timestamp}] INITIALIZING MALICIOUS REPUTATION CHECK FOR IOC: ${ioc}
+-----------------------------------------------------------------------------------------
+[INFO] Cross-referencing decentralized open-source repositories...
+[MATCH FOUND] IOC detected in Simulated Emerging Threats Feed (Blacklisted).
+[RISK ASSESSMENT] CRITICAL (Score: 92/100)
+[ATTRIBUTION] Linked to infrastructure commonly utilized by: APT29 (Cozy Bear).
+[GEOLOCATION] Simulated Endpoint Destination: Western Europe / Distributed Node.
+[STATUS] Recommended Actions: Deploy immediate outbound blockage block on core perimeter firewalls.`;
+                    break;
+
+                case 'ti-ioc-correlation':
+                    out.innerHTML = `[+] [${timestamp}] COMPUTE ENGINE: EXTRACTING CORRELATION MATRIX MAP
+-----------------------------------------------------------------------------------------
+- Analyzing nodes structural similarities...
+- Link Established: IP node connected to command-and-control certificate fingerprints.
+- Connection Path: Input nodes are co-dependent and function as a multi-tier proxy routing infrastructure.
+- Campaign Alignment: Operation CyberShield Breach Attempt (Targeting Financial Sectors).
+- Confidence Score: 96.8% Absolute Certainty.`;
+                    break;
+
+                case 'ti-ioc-repo':
+                    out.innerHTML = `[+] [${timestamp}] REPOSITORY REFRESH: FETCHING CURRENT STATIC CACHE
+-----------------------------------------------------------------------------------------
+Total Cached Indicators: 1,429 Independent Signatures.
+- File Hashes (Malware/Ransomware variants): 812 Records
+- Command & Control Domains (C2 Infrastructure): 405 Records
+- Suspected Brute Force IP Pools: 212 Records
+[STATUS] Local memory synchronized with Global Enterprise Profiles flawlessly.`;
+                    break;
+
+                case 'ti-ioc-class':
+                    const classIoc = document.getElementById('input-ioc-class').value || "unknown-node.exe";
+                    out.innerHTML = `[+] [${timestamp}] CLASSIFICATION ENGINE DISPATCHED:
+-----------------------------------------------------------------------------------------
+Asset evaluated: ${classIoc}
+- Tactical Tag: [Initial-Access:T1190]
+- Criticality Index: HIGH RISK
+- Technical Category: Potential First-Stage Dropper Payload
+- Operational Directive: Quarantine item immediately inside localized environment frameworks.`;
+                    break;
+
+                case 'ti-actor-db':
+                    out.innerHTML = `[+] [${timestamp}] LOADING ENTERPRISE THREAT ACTOR ENCYCLOPEDIA:
+-----------------------------------------------------------------------------------------
+[PROFILE 01] APT38 (Lazarus Group variant) -> Focus: Financial Fraud, Swift Network Manipulation.
+[PROFILE 02] APT41 (Wicked Panda) -> Focus: Intellectual Property Theft, Software Supply Chain Attacks.
+[PROFILE 03] LockBit Consortium -> Focus: Ransomware-as-a-Service (RaaS) operations globally.
+[INFO] All data structural profiles comply fully with STIX 2.1 Framework definitions.`;
+                    break;
+
+                case 'ti-campaign-map':
+                    out.innerHTML = `[+] [${timestamp}] MAPPER GENERATED SUCCESSFUL OUTLINE:
+-----------------------------------------------------------------------------------------
+Campaign Identified: "Operation RustCrown"
+- Target Vector: Critical Industrial Supply Chains / Scada components.
+- Timeline Vector: Initiated Q1 2026, Ongoing infiltration strategies.
+- Current Active Blast Radius: 12 Simulated Core Assets Affected.`;
+                    break;
+
+                case 'ti-ttp-analysis':
+                    out.innerHTML = `[+] [${timestamp}] TTP BEHAVIORAL DECODER ACTIVE:
+-----------------------------------------------------------------------------------------
+- Pattern detected matches Tactics: Persistence & Defense Evasion.
+- Registry alterations mirror typical patterns of process injection.
+- Security Rating: Suspected Advanced Adversary Activity detected. System posture hardened.`;
+                    break;
+
+                case 'ti-attack-nav':
+                    out.innerHTML = `[+] [${timestamp}] MITRE ATT&CK MATRIX COVERAGE INDEX:
+-----------------------------------------------------------------------------------------
+- Initial Access -> 85% Mitigated via Network Shields.
+- Execution      -> 90% Blocked via Endpoint Application Whitelisting.
+- Persistence    -> 70% Monitored via Real-time Registry Integrity Controls.
+- Overall Corporate Defense Posture: EXCELLENT (94/100 Security Rating).`;
+                    break;
+
+                case 'ti-feed':
+                    out.innerHTML = `[+] [${timestamp}] STREAMING REAL-TIME MOCK REPUTATION THREAT INTEL:
+-----------------------------------------------------------------------------------------
+[08:52:10] ALERT - New C2 Infrastructure Registered: update-service-auth.com (Threat: High)
+[08:52:35] INBOUND - Suspected Brute-Force Node Observed: 198.51.100.12 (Category: SSH Abuse)
+[08:53:01] IOC UPDATE - Ransomware variant Hash added: f3a8c88e99... (Variant: LockBit v4)`;
+                    break;
+
+                // مخرجات جناح الأدلة الجنائية الرقمية DFIR
+                case 'dfir-evidence-track':
+                    const evId = document.getElementById('input-ev-id').value || "EV-2026-X";
+                    out.innerHTML = `[+] [${timestamp}] CHAIN OF CUSTODY LOG ENTRY SUCCESSFUL:
+-----------------------------------------------------------------------------------------
+- Evidence ID Registered: ${evId}
+- Cryptographic Verification Checksum: SHA-256 [00d4ff... Verified Master Seal]
+- Vault Storage Location: Simulated Forensic Cleanroom Node 4
+- Status: Secure, Locked, Unaltered.`;
+                    break;
+
+                case 'dfir-timeline-build':
+                    out.innerHTML = `[+] [${timestamp}] FORENSIC TIMELINE GENERATION COMPLETE (SuperTimeline):
+-----------------------------------------------------------------------------------------
+- 2026-06-22 06:12:05 -> System Startup Event Initialized.
+- 2026-06-22 08:30:12 -> Unauthorized Admin elevation event captured (ID: 4624).
+- 2026-06-22 08:31:00 -> Mass File Rename Loop Detected (Potential Ransomware Execution Anchor).
+- 2026-06-22 08:45:00 -> Forensic Image Capture Dispatched by Security Operations.`;
+                    break;
+
+                case 'dfir-artifact-view':
+                    out.innerHTML = `[+] [${timestamp}] ARTIFACT ANALYZER EXTRACTED DATA:
+-----------------------------------------------------------------------------------------
+- Registry Hive Location: HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run
+- Key Discovered: "SystemUpdateService" -> points to execution path: "C:\\Users\\Public\\mal.exe"
+- Conclusion: Confirmed Malicious Persistence Mechanism Established.`;
+                    break;
+
+                case 'dfir-case-manage':
+                    out.innerHTML = `[+] [${timestamp}] CURRENT ACTIVE CASES OVERVIEW:
+-----------------------------------------------------------------------------------------
+- Case #CR-2026-01: Ransomware containment on Domain Controller [STATUS: CONTAINED]
+- Case #CR-2026-02: Advanced Phishing / Credential Leakage Vector [STATUS: INVESTIGATING]
+- Case #CR-2026-03: Unauthorized Cloud Resource Creation Alert [STATUS: RESOLVED]`;
+                    break;
+
+                case 'dfir-mem-sim':
+                    out.innerHTML = `[+] [${timestamp}] VOLATILITY RAM ANALYSIS RESULTS (MOCK CAPTURE):
+-----------------------------------------------------------------------------------------
+PID     PPID    ImageName               Start Time             Threads   Handles
+420     4       services.exe            2026-06-22 06:12:00    14        230
+1984    420     svchost.exe             2026-06-22 06:15:22    8         95
+3412    1984    svchost_mal.exe         2026-06-22 08:30:15    34        812  <-- [SUSPICIOUS PROCESS INJECTION DETECTED]`;
+                    break;
+
+                case 'dfir-disk-sim':
+                    out.innerHTML = `[+] [${timestamp}] SLEUTH KIT CORE RECOVERY OUTPUT:
+-----------------------------------------------------------------------------------------
+- Analyzing Partition Table: NTFS File System Structure.
+- Carving operation active... Found deleted executable header magic bytes [MZ / 0x4d5a].
+- Restored File Asset: "deleted_evidence_payload.bin" (Size: 2.4 MB)
+- Computing Hash... SHA-256 Checksum generated instantly for reporting verification.`;
+                    break;
+
+                case 'dfir-file-timeline':
+                    out.innerHTML = `[+] [${timestamp}] MACB DATASET STRUCTURE:
+-----------------------------------------------------------------------------------------
+File: C:\\Windows\\System32\\drivers\\etc\\hosts
+- M (Modified): 2026-06-22 08:30:00 (Malicious Redirects Injection Time)
+- A (Accessed): 2026-06-22 08:50:12
+- C (Created):  2023-10-12 12:00:00
+- B (Born):     2023-10-12 12:00:00`;
+                    break;
+
+                case 'dfir-evidence-chain':
+                    out.innerHTML = `[+] [${timestamp}] LEGAL post-mortem COMPLIANCE VERIFIER:
+-----------------------------------------------------------------------------------------
+- Auditor Integrity Verification: PASS
+- Discrepancies Checked: ZERO digital divergence detected.
+- Digital Signatures Match Enterprise Registrar Master Public Keys perfectly.`;
+                    break;
+
+                case 'dfir-notes':
+                    const notes = document.getElementById('txt-dfir-notes').value || "No manual notes provided.";
+                    out.innerHTML = `[+] [${timestamp}] FORENSIC NOTES SECURELY WRITTEN TO LOCAL STATE:
+-----------------------------------------------------------------------------------------
+Recorded Statement: "${notes}"
+- System Metadata Meta-Tag: Appended with Clearance Credentials. Locked for audit retention.`;
+                    break;
+
+                case 'dfir-reports':
+                    out.innerHTML = `[+] [${timestamp}] GENERATING COMPREHENSIVE DFIR POST-MORTEM DOSSIER:
+-----------------------------------------------------------------------------------------
+- Incident Category: Unauthorized Intrusion & Advanced Dropper Execution.
+- Impact Rating: Severe Operational Interruption.
+- Containment Window: 14 Minutes from initial security event propagation.
+- Downloadable PDF Payload Structure compiled ready in browser local cache.`;
+                    break;
+            }
+        },
+        buildExtended(id, container) {
+        switch(id) {
+            // ==========================================
+            // SOC SUITE (21 - 30)
+            // ==========================================
+            case 'soc-alert-dash':
+                container.innerHTML = `
+                    <div class="cyber-grid-4">
+                        <div class="enterprise-card danger-card" style="text-align:center; padding:15px;">
+                            <div class="form-label">Critical Alerts</div>
+                            <div style="font-size:1.8rem; color:var(--danger); font-family:'Share Tech Mono';">14 Active</div>
+                        </div>
+                        <div class="enterprise-card" style="text-align:center; padding:15px;">
+                            <div class="form-label">Unassigned</div>
+                            <div style="font-size:1.8rem; color:var(--warning); font-family:'Share Tech Mono';">29 Alerts</div>
+                        </div>
+                        <div class="enterprise-card" style="text-align:center; padding:15px;">
+                            <div class="form-label">Avg Triage Time</div>
+                            <div style="font-size:1.8rem; color:var(--primary); font-family:'Share Tech Mono';">4.2 Min</div>
+                        </div>
+                        <div class="enterprise-card success-card" style="text-align:center; padding:15px;">
+                            <div class="form-label">True Positive Rate</div>
+                            <div style="font-size:1.8rem; color:var(--success); font-family:'Share Tech Mono';">87.4%</div>
+                        </div>
+                    </div>
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-bell"></i> 21. Real-Time SOC Alert Dashboard</div>
+                        <p class="form-label">شاشة المراقبة الفورية للتنبيهات الأمنية الواردة من مجسات الأمان بالمؤسسة:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('soc-alert-dash')"><i class="fa-solid fa-sync"></i> تحديث مصفوفة التنبيهات</button>
+                        <div id="out-soc-alert-dash" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'soc-incident-queue':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-list-ol"></i> 22. Central Incident Queue</div>
+                        <p class="form-label">طابور الحوادث المركزية لتنظيم مهام محللي الأمان وتوزيع الحالات:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('soc-incident-queue')"><i class="fa-solid fa-layer-group"></i> جلب قائمة الحوادث النشطة</button>
+                        <div id="out-soc-incident-queue" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'soc-event-view':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-eye"></i> 23. Real-Time Security Event Viewer</div>
+                        <p class="form-label">مستعرض الأحداث الأمنية الخام القادمة من أنظمة كشف التسلل وعمليات التدقيق:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('soc-event-view')"><i class="fa-solid fa-bolt"></i> بدء دفق الأحداث الأمنية</button>
+                        <div id="out-soc-event-view" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'soc-corr-engine':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-gears"></i> 24. Live SOC Correlation Engine</div>
+                        <p class="form-label">محرك الربط والتحليل الفوري لمطابقة الأحداث المنفصلة وتحديد سيناريوهات الهجوم:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('soc-corr-engine')"><i class="fa-solid fa-network-wired"></i> تشغيل محرك الربط الديناميكي</button>
+                        <div id="out-soc-corr-engine" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'soc-prioritization':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-arrow-up-wide-short"></i> 25. Alert Prioritization Matrix</div>
+                        <p class="form-label">نظام ترتيب أولويات التنبيهات ذكياً بناءً على أهمية الأصل والتهديد لتفادي تشتت المحلل:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('soc-prioritization')"><i class="fa-solid fa-sliders"></i> حساب مستويات الأولوية الحالية</button>
+                        <div id="out-soc-prioritization" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'soc-workspace':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-laptop-code"></i> 26. Tier-1/Tier-2 Analyst Workspace</div>
+                        <p class="form-label">بيئة عمل المحلل الأمني المتكاملة لإجراء عمليات الفحص والفرز السريع:</p>
+                        <input type="text" id="input-soc-ticket" class="cyber-input" placeholder="رقم التذكرة أو معرف التنبيه...">
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('soc-workspace')"><i class="fa-solid fa-wand-magic-sparkles"></i> فتح لوحة التحقيق الفوري</button>
+                        <div id="out-soc-workspace" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'soc-escalation':
+                container.innerHTML = `
+                    <div class="enterprise-card danger-card">
+                        <div class="tool-title"><i class="fa-solid fa-triangle-exclamation"></i> 27. Incident Escalation Queue (Tier 3 / IRT)</div>
+                        <p class="form-label">إحالة التهديدات المعقدة والمستعصية إلى فريق الاستجابة للحوادث والمستشارين:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('soc-escalation')"><i class="fa-solid fa-user-shield"></i> استعراض طابور التصعيد الحرج</button>
+                        <div id="out-soc-escalation" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'soc-timeline':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-arrow-down-1-9"></i> 28. SOC Operational Incident Timeline</div>
+                        <p class="form-label">التسلسل الإجرائي للخطوات المتخذة منذ رصد التنبيه وحتى مرحلة الاحتواء والحل:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('soc-timeline')"><i class="fa-solid fa-route"></i> تتبع الخط الزمني للإجراءات</button>
+                        <div id="out-soc-timeline" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'soc-alert-stats':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-chart-pie"></i> 29. Alert Statistics & Categorization</div>
+                        <p class="form-label">الإحصائيات التحليلية لتصنيف التنبيهات حسب النوع ومصدر التهديد:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('soc-alert-stats')"><i class="fa-solid fa-chart-column"></i> توليد الإحصائيات الفورية</button>
+                        <div id="out-soc-alert-stats" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'soc-metrics':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-calculator"></i> 30. Executive SOC Performance Metrics</div>
+                        <p class="form-label">مؤشرات الأداء الرئيسية للمركز (MTTR, MTTD, Analyst Burnout Level):</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('soc-metrics')"><i class="fa-solid fa-square-poll-horizontal"></i> استخراج تقارير الكفاءة التشغيلية</button>
+                        <div id="out-soc-metrics" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+
+            // ==========================================
+            // SIEM SUITE (31 - 40)
+            // ==========================================
+            case 'siem-collection':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-download"></i> 31. Distributed Log Collection Forwarder</div>
+                        <p class="form-label">مستقبل وموزع السجلات القادم من خوادم الويندوز، اللينكس، وأجهزة الشبكة المتعددة:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('siem-collection')"><i class="fa-solid fa-cloud-arrow-down"></i> فحص حالة وكلاء الجمع (Agents)</button>
+                        <div id="out-siem-collection" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'siem-parsing':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-code"></i> 32. Universal Log Parsing & Normalization</div>
+                        <p class="form-label">تحويل السجلات غير المنظمة إلى صيغة موحدة (ECS / Common Event Format):</p>
+                        <textarea id="input-siem-raw" class="cyber-input" rows="3" placeholder="أدخل السجل الخام هنا... (e.g., <34>1 2026-06-22T20:55:00Z webserver...)"></textarea>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('siem-parsing')"><i class="fa-solid fa-wand-magic"></i> معالجة وهيكلة السجل</button>
+                        <div id="out-siem-parsing" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'siem-rule-manage':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-list-check"></i> 33. SIEM Correlation Rule Management</div>
+                        <p class="form-label">إدارة القواعد النشطة وتفعيل/تعطيل محددات كشف السلوك الخبيث:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('siem-rule-manage')"><i class="fa-solid fa-shield"></i> عرض مصفوفة القواعد الشغالة</button>
+                        <div id="out-siem-rule-manage" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'siem-det-rules':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-bolt-lightning"></i> 34. Real-time Detection Rules Repository</div>
+                        <p class="form-label">مستودع قواعد كشف التهديدات المبني على معايير Sigma و Yara-L:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('siem-det-rules')"><i class="fa-solid fa-folder-open"></i> استعراض ملفات القواعد المعتمدة</button>
+                        <div id="out-siem-det-rules" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'siem-corr-rules':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-shuffle"></i> 35. Multi-Stage Correlation Rule Compiler</div>
+                        <p class="form-label">مترجم قواعد الربط متعدد المراحل (مثال: محاولات دخول فاشلة يتبعها اتصال بقاعدة البيانات):</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('siem-corr-rules')"><i class="fa-solid fa-brain"></i> تشغيل واختبار المترجم المركب</button>
+                        <div id="out-siem-corr-rules" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'siem-alert-engine':
+                container.innerHTML = `
+                    <div class="enterprise-card danger-card">
+                        <div class="tool-title"><i class="fa-solid fa-fire"></i> 36. High-Performance SIEM Alert Engine</div>
+                        <p class="form-label">المحرك المسؤول عن إطلاق الإنذارات الأمنية وإرسالها الفوري إلى واجهات الـ SOC والبريد:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('siem-alert-engine')"><i class="fa-solid fa-play"></i> فحص كفاءة وتجاوب محرك التنبيه</button>
+                        <div id="out-siem-alert-engine" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'siem-analytics':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-chart-gantt"></i> 37. SIEM Dashboard Analytics</div>
+                        <p class="form-label">التحليلات البيانية العميقة لمعدلات تدفق البيانات وحجم السجلات المستهلكة في الثانية EPS:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('siem-analytics')"><i class="fa-solid fa-chart-line"></i> توليد تقرير أداء قاعدة البيانات</button>
+                        <div id="out-siem-analytics" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'siem-timeline':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-list-timeline"></i> 38. SIEM Consolidated Event Timeline</div>
+                        <p class="form-label">دمج السجلات المتفرقة من كافة الخوادم في جدول زمني موحد لفهم مسار الاختراق:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('siem-timeline')"><i class="fa-solid fa-eye"></i> دمج وبناء المخطط الزمني</button>
+                        <div id="out-siem-timeline" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'siem-threat-det':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-shield-halved"></i> 39. Automated Threat Detection Module</div>
+                        <p class="form-label">وحدة الكشف المؤتمتة عن التهديدات المستمرة المتقدمة بالاعتماد على التحليل السلوكي:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('siem-threat-det')"><i class="fa-solid fa-robot"></i> تشغيل وحدة الكشف الذكي</button>
+                        <div id="out-siem-threat-det" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'siem-explorer':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-file-waveform"></i> 40. Advanced Log Explorer Query Console</div>
+                        <p class="form-label">منصة كتابة الاستعلامات المتقدمة للبحث في مليارات السجلات التاريخية بسرعة فائقة:</p>
+                        <input type="text" id="input-siem-query" class="cyber-input" placeholder="e.g., event.code: 4624 AND user.name: administrator">
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('siem-explorer')"><i class="fa-solid fa-terminal"></i> تنفيذ استعلام البحث</button>
+                        <div id="out-siem-explorer" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+
+            // ==========================================
+            // VULNERABILITY INTELLIGENCE (41 - 50)
+            // ==========================================
+            case 'vuln-cve-search':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-bug"></i> 41. Enterprise CVE Reference Search</div>
+                        <p class="form-label">البحث والتحقق الفوري من تفاصيل الثغرات الأمنية الشائعة عبر المعرفات القياسية:</p>
+                        <input type="text" id="input-vuln-cve" class="cyber-input" placeholder="e.g., CVE-2021-44228, CVE-2024-3094">
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('vuln-cve-search')"><i class="fa-solid fa-search"></i> جلب بيانات الثغرة الرسمية</button>
+                        <div id="out-vuln-cve-search" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'vuln-cvss-calc':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-calculator"></i> 42. CVSS v3.1 / v4.0 Severity Calculator</div>
+                        <p class="form-label">حاسبة نقاط الخطورة القياسية بناءً على خصائص الثغرة (Attack Vector, Complexity, Impact):</p>
+                        <input type="text" id="input-cvss-vector" class="cyber-input" placeholder="e.g., CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H">
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('vuln-cvss-calc')"><i class="fa-solid fa-compute"></i> حساب درجة الخطورة</button>
+                        <div id="out-vuln-cvss-calc" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'vuln-explorer':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-box-archive"></i> 43. Infrastructure Vulnerability Explorer</div>
+                        <p class="form-label">مستكشف الثغرات المكتشفة داخل الأصول والشبكات الداخلية للمؤسسة:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('vuln-explorer')"><i class="fa-solid fa-eye"></i> استعراض الثغرات غير المرقّعة</button>
+                        <div id="out-vuln-explorer" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'vuln-cwe-exp':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-folder-tree"></i> 44. CWE (Common Weakness Enumeration) Explorer</div>
+                        <p class="form-label">مستعرض أنواع العيوب البرمجية في الأكواد والأنظمة لتوجيه فرق التطوير الآمن:</p>
+                        <input type="text" id="input-vuln-cwe" class="cyber-input" placeholder="e.g., CWE-79, CWE-89">
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('vuln-cwe-exp')"><i class="fa-solid fa-network-wired"></i> جلب تصنيف الـ CWE</button>
+                        <div id="out-vuln-cwe-exp" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'vuln-capec-exp':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-shield-halved"></i> 45. CAPEC Attack Pattern Explorer</div>
+                        <p class="form-label">استكشاف الأنماط والآليات التي يستخدمها المهاجمون لاستغلال العيوب البرمجية:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('vuln-capec-exp')"><i class="fa-solid fa-diagram-successor"></i> تحميل مصفوفة أنماط الاستغلال</button>
+                        <div id="out-vuln-capec-exp" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'vuln-matrix':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-table-cells"></i> 46. Enterprise Risk & Severity Matrix</div>
+                        <p class="form-label">مصفوفة تقييم مستوى الخطر الفعلي عبر دمج نقاط خطورة الثغرة مع أهمية الأصل المتضرر:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('vuln-matrix')"><i class="fa-solid fa-table"></i> توليد مصفوفة التقييم المؤسسي</button>
+                        <div id="out-vuln-matrix" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'vuln-reports':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-file-invoice"></i> 47. Executive Vulnerability Assessment Reports</div>
+                        <p class="form-label">منشئ تقارير فحص ومسح الثغرات الدورية المخصصة للإدارات التنفيذية والفنية:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('vuln-reports')"><i class="fa-solid fa-file-shield"></i> صياغة تقرير الثغرات العام</button>
+                        <div id="out-vuln-reports" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'vuln-risk-dash':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-gauge"></i> 48. Vulnerability Risk Management Dashboard</div>
+                        <p class="form-label">لوحة القيادة والمتابعة اللحظية لمستويات المخاطر الإجمالية الناتجة عن الثغرات المفتوحة:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('vuln-risk-dash')"><i class="fa-solid fa-chart-pie"></i> تحديث مؤشرات الخطر</button>
+                        <div id="out-vuln-risk-dash" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'vuln-patch-track':
+                container.innerHTML = `
+                    <div class="enterprise-card success-card">
+                        <div class="tool-title"><i class="fa-solid fa-screwdriver-wrench"></i> 49. Enterprise Patch Tracking System</div>
+                        <p class="form-label">تتبع عمليات نشر التحديثات والترقيعات الأمنية على مستوى خوادم وأجهزة المؤسسة:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('vuln-patch-track')"><i class="fa-solid fa-clock-rotate-left"></i> عرض حالة حملات الترقيع</button>
+                        <div id="out-vuln-patch-track" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+            case 'vuln-mitigation':
+                container.innerHTML = `
+                    <div class="enterprise-card">
+                        <div class="tool-title"><i class="fa-solid fa-book-medical"></i> 50. Compensating Controls & Mitigation Library</div>
+                        <p class="form-label">مكتبة الحلول البديلة والضوابط التعويضية لحماية الأنظمة التي لا يمكن تزويدها بترقيع فوري:</p>
+                        <button class="btn-cyber-action" onclick="CyberViewsFactory.exec('vuln-mitigation')"><i class="fa-solid fa-bookmark"></i> استخراج خطط التخفيف الجاهزة</button>
+                        <div id="out-vuln-mitigation" class="cyber-terminal" style="display:none;"></div>
+                    </div>`;
+                break;
+
+            default:
+                // التوجيه إلى القسم البرمجي الثالث للأدوات من 51 إلى 100 لضمان الحجم الكامل للملف
+                CyberViewsFactory.buildFinalSuites(id, container);
+                break;
+        }
+    },
+    // ==========================================
+                // مخرجات جناح الـ SOC (21 - 30)
+                // ==========================================
+                case 'soc-alert-dash':
+                    out.innerHTML = `[+] [${timestamp}] REFRESHING REAL-TIME SOC ALERT STREAM MATRIX:
+-----------------------------------------------------------------------------------------
+[CRITICAL] Alert ID: AL-8921 -> Multiple Failed Kerberos Pre-Auth Attempts from 10.0.4.15 [Target: DC01]
+[HIGH]     Alert ID: AL-8922 -> EDR Alert: Unsigned Binary executing from AppData\\Local\\Temp
+[MEDIUM]   Alert ID: AL-8923 -> Network Probe Detected: Port Sweep on Core Firewall Inbound Interface
+[STATUS] Stream fully active. Listening on Secure Websocket Broker Port: 8443.`;
+                    break;
+
+                case 'soc-incident-queue':
+                    out.innerHTML = `[+] [${timestamp}] CORE INCIDENT QUEUE RETRIEVED (Sorted by SLA Urgency):
+-----------------------------------------------------------------------------------------
+- INC-2026-401 | Critical | Unassigned | SLA: 12 Min Remaining | Active Data Exfiltration Suspected
+- INC-2026-402 | High     | Analyst_04 | SLA: 45 Min Remaining | Phishing Payload Executed on Endpoint
+- INC-2026-403 | Medium   | Analyst_12 | SLA: 2.5 Hours Left   | Persistent SSH Brute Force Blocked
+[INFO] Integration with ServiceNow & Jira SecOps endpoints is healthy.`;
+                    break;
+
+                case 'soc-event-view':
+                    out.innerHTML = `[+] [${timestamp}] OPENING RAW REAL-TIME EVENT STREAM (TAIL -F MATRIX):
+-----------------------------------------------------------------------------------------
+{"timestamp":"${timestamp}","source":"Suricata_IDS","event_type":"alert","signature":"ET MALWARE CryptoMiner Checkin","src_ip":"192.168.1.45","dest_ip":"185.220.101.2"}
+{"timestamp":"${timestamp}","source":"WinEvtLog","event_id":4625,"user":"BackupAdmin","status":"Failure","workstation":"DESKTOP-89A"}
+{"timestamp":"${timestamp}","source":"AWS_CloudTrail","event":"AssumeRole","user":"Unknown_Actor","status":"Success"}`;
+                    break;
+
+                case 'soc-corr-engine':
+                    out.innerHTML = `[+] [${timestamp}] CORRELATION ENGINE ACTIVE - PROCESSING GRAPH NODES:
+-----------------------------------------------------------------------------------------
+- Event A: 50 Failed Logins on User 'FinanceMgr' within 30 seconds -> Evaluated.
+- Event B: 1 Successful Login on User 'FinanceMgr' from non-standard GeoIP (VPN) -> Evaluated.
+- Event C: Mass download request initiated on SharePoint Server by 'FinanceMgr' -> Evaluated.
+[🔥 CRITICAL CORRELATION TRIGGERED] -> Rule: "Compromised Credentials followed by Data Harvesting"
+[ACTION] Incident generated automatically: INC-2026-409.`;
+                    break;
+
+                case 'soc-prioritization':
+                    out.innerHTML = `[+] [${timestamp}] ALGORITHM RUNNING: ALIGNING ALERT SEVERITY WITH ASSET CRITICALITY:
+-----------------------------------------------------------------------------------------
+- Raw Alert: SQL Injection Attempt -> Base Severity: HIGH
+- Targeted Asset: 'Corporate Public Blog' -> Asset Criticality: LOW
+---> Adjusted Priority: Tier 3 (Monitor / Low Triage Priority)
+
+- Raw Alert: Failed RDP Login -> Base Severity: LOW
+- Targeted Asset: 'Core Customer Database Vault' -> Asset Criticality: MISSION_CRITICAL
+---> Adjusted Priority: Tier 1 (IMMEDIATE ACTION REQUIRED - CRITICAL)`;
+                    break;
+
+                case 'soc-workspace':
+                    const ticket = document.getElementById('input-soc-ticket').value || "INC-2026-401";
+                    out.innerHTML = `[+] [${timestamp}] LOADING WORKSPACE CONSOLE FOR INCIDENT: ${ticket}
+-----------------------------------------------------------------------------------------
+[Target Asset] Server-Prod-ERP (10.100.2.4)
+[Threat Intel Link] Associated with Russian Nexus threat indicators.
+[EDR Telemetry] Process isolation available. Network isolation ready.
+[PLAYBOOK SUGGESTION] Disconnect host from internal segment, dump LSASS memory pool for DFIR analysis.`;
+                    break;
+
+                case 'soc-escalation':
+                    out.innerHTML = `[+] [${timestamp}] TIER-3 ESCALATION INTERFACE ACTIVE:
+-----------------------------------------------------------------------------------------
+[PENDING APPROVAL] Request to deploy corporate-wide credential revocation due to suspected Active Directory Controller synchronization breach.
+[ASSIGNED IRM COMMANDER] Director of Incident Response
+[COUNTER-MEASURE STATUS] Isolation scripts staged on all 1,200 domain-joined machines.`;
+                    break;
+
+                case 'soc-timeline':
+                    out.innerHTML = `[+] [${timestamp}] EXTRACTING OPERATIONAL INCIDENT TRACKING LOGS:
+-----------------------------------------------------------------------------------------
+- T0 (20:40:12) -> Inbound Malicious Beaconing Alert triggered by Network Sensor.
+- T1 (20:42:00) -> Automated Triage Engine analyzed host and confirmed unauthorized execution.
+- T2 (20:43:15) -> Analyst acknowledged ticket, initiated host quarantine via EDR API.
+- T3 (20:45:00) -> Host isolated successfully. Threat neutralized. Remediation pending.`;
+                    break;
+
+                case 'soc-alert-stats':
+                    out.innerHTML = `[+] [${timestamp}] COMPUTING WEEKLY STATUS AND CATEGORIZATION CHART DATA:
+-----------------------------------------------------------------------------------------
+- Authentication Attacks (Brute force/Spraying): 42% of total volume.
+- Endpoint EDR Telemetry Anomalies: 28% of total volume.
+- Network Anomalies & Port Scanning: 20% of total volume.
+- Phishing Report Submissions via Users: 10% of total volume.`;
+                    break;
+
+                case 'soc-metrics':
+                    out.innerHTML = `[+] [${timestamp}] GENERATING EXECUTIVE SOC EFFICIENCY SLA MATRIX:
+-----------------------------------------------------------------------------------------
+- Mean Time To Detect (MTTD): 1.8 Minutes (Target: < 5 Min) [EXCELLENT]
+- Mean Time To Respond (MTTR): 14.5 Minutes (Target: < 30 Min) [EXCELLENT]
+- Alert False Positive Ratio: 12.6% [Optimal System Calibration Checked]
+- Closed Tickets without Escalation: 84.2%`;
+                    break;
+
+                // ==========================================
+                // مخرجات جناح الـ SIEM (31 - 40)
+                // ==========================================
+                case 'siem-collection':
+                    out.innerHTML = `[+] [${timestamp}] INSPECTING AGENT HEARTBEATS AND EVENT PIPELINES:
+-----------------------------------------------------------------------------------------
+- Forwarder-Win-AD01   (10.0.0.4)   -> STATUS: ONLINE  | EPS: 450 msg/sec
+- Forwarder-Linux-Web  (10.0.2.10)  -> STATUS: ONLINE  | EPS: 1,200 msg/sec
+- Forwarder-Firewall   (10.254.0.1) -> STATUS: ONLINE  | EPS: 3,400 msg/sec
+[SYSTEM STATUS] Cluster buffer usage: 14% capacity. Storage pool: 45TB Free.`;
+                    break;
+
+                case 'siem-parsing':
+                    const rawLog = document.getElementById('input-siem-raw').value || "<34>1 2026-06-22T20:55:00Z webserver-01 sshd[2314]: Failed password for invalid user root from 203.0.113.5 port 49231 ssh2";
+                    out.innerHTML = `[+] [${timestamp}] PARSING RAW SECURITY LOG INTO NORMALIZED JSON FIELDS:
+-----------------------------------------------------------------------------------------
+{
+  "agent": { "name": "webserver-01", "type": "sshd" },
+  "event": { "action": "ssh_login_failed", "outcome": "failure", "severity": 3 },
+  "source": { "ip": "203.0.113.5", "port": 49231 },
+  "user": { "target_name": "root" },
+  "network": { "protocol": "ssh2" }
+}
+[STATUS] Successfully normalized against Enterprise Schema. Mapping index verified.`;
+                    break;
+
+                case 'siem-rule-manage':
+                    out.innerHTML = `[+] [${timestamp}] ACTIVE SIEM DEPLOYED RULES ARCHITECTURE:
+-----------------------------------------------------------------------------------------
+- Rule-ID: R-101 | Name: Excessive_Failed_Logins      | Status: ENABLED  | Severity: Medium
+- Rule-ID: R-102 | Name: Lateral_Movement_PsExec       | Status: ENABLED  | Severity: Critical
+- Rule-ID: R-103 | Name: DNS_Tunneling_Detection       | Status: ENABLED  | Severity: High
+- Total Loaded Correlation Rules: 412 Independent Logic Sets.`;
+                    break;
+
+                case 'siem-det-rules':
+                    out.innerHTML = `[+] [${timestamp}] FETCHING COMPILED SIGMA / YARA-L SPECTRA:
+-----------------------------------------------------------------------------------------
+title: Suspicious PowerShell DownloadString
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4688
+        CommandLine|contains:
+            - '.DownloadString('
+            - 'Net.WebClient'
+    condition: selection
+falsepositives: Administrative installation scripts.
+level: high`;
+                    break;
+
+                case 'siem-corr-rules':
+                    out.innerHTML = `[+] [${timestamp}] COMPILING CORRELATION STATE ENGINE LOGIC:
+-----------------------------------------------------------------------------------------
+[STATE TRACKER INITIALIZED]
+- Looking for sliding window matches: Delta Time = 5 Minutes.
+- Memory allocation pattern: Cache state tracks unique source-destination pairs dynamically.
+- System Engine performance benchmark: 154,000 Complex rule evaluations per second. Zero loss.`;
+                    break;
+
+                case 'siem-alert-engine':
+                    out.innerHTML = `[+] [${timestamp}] ALERT ENGINE PERFORMANCE HEALTH CHECK:
+-----------------------------------------------------------------------------------------
+- Dispatch Thread Pool: 16 Workers active.
+- Kafka Queue Consumer Lag: 0ms (Synchronous real-time delivery).
+- Webhook endpoints verified: Slack Webhook [OK], PagerDuty Core API [OK], SOC Panel [OK].`;
+                    break;
+
+                case 'siem-analytics':
+                    out.innerHTML = `[+] [${timestamp}] EXTRACTING REAL-TIME CLUSTER METRICS ENGINE:
+-----------------------------------------------------------------------------------------
+- Total Ingestion Rate: 5,450 Events Per Second (EPS) avg.
+- Daily Storage Growth Vector: +142 GB compressed data blocks.
+- Indexing Pipeline Delay: 42ms absolute latency.
+- Data Retention Policy enforcement status: 90 Days Hot, 365 Days Cold active.`;
+                    break;
+
+                case 'siem-timeline':
+                    out.innerHTML = `[+] [${timestamp}] CONSOLIDATING SYSTEM RECONSTRUCTION CHRONOLOGY:
+-----------------------------------------------------------------------------------------
+[02:14:10] Firewall -> Allowed Inbound Traffic to DMZ WebServer on port 443 (Src: 192.0.2.8)
+[02:14:15] WebServer-Apache -> Exploitation payload executed via HTTP POST Header.
+[02:14:20] Linux-Kernel -> New interactive bash process spawned under 'www-data' user privilege.
+[02:15:01] ActiveDirectory-DC -> Failed NTLM authentication attempt observed from DMZ Segment.`;
+                    break;
+
+                case 'siem-threat-det':
+                    out.innerHTML = `[+] [${timestamp}] MACHINE LEARNING ANOMALY DETECTION ENGINE ENGINE:
+-----------------------------------------------------------------------------------------
+- Checking baseline user behavioral patterns (UBA)...
+- Target User: 'Dev_User_03' accessed internal Git repository at 03:00 AM.
+- Historical standard access window: 09:00 AM - 06:00 PM.
+- Downloaded repository size: 4.2 GB (Historical median: 12 MB).
+[RISK VECTOR ALERT] Anomaly detected. Confidence score: 91.2%. Incident forwarded.`;
+                    break;
+
+                case 'siem-explorer':
+                    const queryStr = document.getElementById('input-siem-query').value || "*";
+                    out.innerHTML = `[+] [${timestamp}] EXECUTING INDEXED SEARCH FOR FILTER: "${queryStr}"
+-----------------------------------------------------------------------------------------
+Searching index [logs-security-prod-*] ...
+- Scan completed in 142ms. Total matching records found: 3 Records.
+[RECORD 1] WinEvent: Code 4624 | User: Administrator | Source IP: 10.0.4.52
+[RECORD 2] WinEvent: Code 4624 | User: Administrator | Source IP: 10.0.4.52
+[RECORD 3] WinEvent: Code 4624 | User: Administrator | Source IP: 10.0.4.52`;
+                    break;
+
+                // ==========================================
+                // مخرجات جناح الثغرات (41 - 50)
+                // ==========================================
+                case 'vuln-cve-search':
+                    const cveId = document.getElementById('input-vuln-cve').value || "CVE-2021-44228";
+                    out.innerHTML = `[+] [${timestamp}] QUERYING LOCAL CVE INTEL REPOSITORY FOR: ${cveId}
+-----------------------------------------------------------------------------------------
+- Title: Log4Shell - Remote Code Execution vulnerability in Apache Log4j2
+- Base Score: 10.0 CRITICAL (CVSS v3)
+- Attack Vector: Network (No authentication required)
+- Exploitability Status: Public Weaponized Exploits widely available in the wild.
+- Remediation: Upgrade software package to version 2.17.1 or apply system flags.`;
+                    break;
+
+                case 'vuln-cvss-calc':
+                    const vector = document.getElementById('input-cvss-vector').value || "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H";
+                    out.innerHTML = `[+] [${timestamp}] COMPUTING SCORE FROM VECTOR STRINGS:
+-----------------------------------------------------------------------------------------
+Vector analyzed: ${vector}
+- Base Score: 9.8 [CRITICAL SEVERITY LEVEL]
+- Impact Subscore: 5.9
+- Exploitability Subscore: 3.9
+- Technical Metrics: Remote attack, low technical entry barrier, complete confidentiality, integrity, and availability compromise.`;
+                    break;
+
+                case 'vuln-explorer':
+                    out.innerHTML = `[+] [${timestamp}] INFRASTRUCTURE ACTIVE SCAN ANALYSIS REPORT:
+-----------------------------------------------------------------------------------------
+- Asset: DB-Core-Prod (10.0.10.2) -> 1 Vulnerability Detected (Severity: High, Patch Available)
+- Asset: External-Website (198.51.100.2) -> 3 Vulnerabilities Detected (Severity: Medium, Config Error)
+- Asset: Backup-Storage (10.0.20.5) -> 0 Vulnerabilities Detected.
+[STATUS] Corporate Exposure Score: 24/100 (Secure Environment Posture Profile Verified)`;
+                    break;
+
+                case 'vuln-cwe-exp':
+                    const cweIdVal = document.getElementById('input-vuln-cwe').value || "CWE-89";
+                    out.innerHTML = `[+] [${timestamp}] FETCHING DEFINITION MATRIX FOR: ${cweIdVal}
+-----------------------------------------------------------------------------------------
+- Standard Name: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')
+- Abstract Description: The software constructs an SQL command using user-supplied input without proper validation, leading to arbitrary data manipulation or system access.
+- Mitigation Strategy: Utilize parameterized queries and strictly enforce input type white-listing frameworks.`;
+                    break;
+
+                case 'vuln-capec-exp':
+                    out.innerHTML = `[+] [${timestamp}] DOWNLOADING MITRE CAPEC ENUMERATION TREES:
+-----------------------------------------------------------------------------------------
+- CAPEC-66:  SQL Injection Attacks (Targets backend relational storage architectures)
+- CAPEC-169: HTTP Response Smuggling (Exploits intermediaries and front-end reverse proxies)
+- CAPEC-242: Component Substitution (Malicious dependency squatting in development environments)
+- Library state synced fully with threat modeling components.`;
+                    break;
+
+                case 'vuln-matrix':
+                    out.innerHTML = `[+] [${timestamp}] EVALUATING ASSET-BASED CRITICAL RISK ALIGNMENTS:
+-----------------------------------------------------------------------------------------
+Calculated Threat Map Matrix:
+                     [Asset Criticality: Low]   [Asset Criticality: High]
+[CVSS Score: High]   -> Risk Rating: Medium     -> Risk Rating: CRITICAL (Remediation SLA: 24h)
+[CVSS Score: Low]    -> Risk Rating: Informational -> Risk Rating: Low (Remediation SLA: 30 Days)
+[SYSTEM MATRIX CHECK] 12 Critical corporate items currently monitored under active remediation tracks.`;
+                    break;
+
+                case 'vuln-reports':
+                    out.innerHTML = `[+] [${timestamp}] COMPILING RECONNAISSANCE AUDIT STATUS FOR CISOS:
+-----------------------------------------------------------------------------------------
+- Scan Cycle Date: Q2 2026 Audit Report
+- Scanned Assets: 1,450 Network Endpoints
+- Total Discovered Vulnerabilities: 342 (Critical: 2, High: 45, Medium: 120, Low: 175)
+- Overall Remediation Compliance Rate against corporate baselines: 91.5%.`;
+                    break;
+
+                case 'vuln-risk-dash':
+                    out.innerHTML = `[+] [${timestamp}] COMPUTING ENTERPRISE BLAST RADIUS ASSESSMENT METRICS:
+-----------------------------------------------------------------------------------------
+- Enterprise Vulnerability Management Index: 810 / 1000 (Higher is safer)
+- Total Untreated Internet-Facing Exposures: ZERO ACTIVE EXP
+- Longest-standing Unpatched Vulnerability: 14 Days (Category: Medium Risk Server Component)
+[STATUS] Posture confirms low risk factor index across global network parameters.`;
+                    break;
+
+                case 'vuln-patch-track':
+                    out.innerHTML = `[+] [${timestamp}] DISPATCHING ENTERPRISE KACE / SCCM UPDATE STATE:
+-----------------------------------------------------------------------------------------
+- Patch Package: KB5034123 (Windows Security Cumulative Update)
+- Deployment Target Group: All Production Workstations
+- Success Vector: 1,120 Endpoints Updated Successfully. 14 Endpoints Failed/Pending Reboot.
+- Next scheduled enforcement sweep: Tonight at 23:00 UTC.`;
+                    break;
+
+                case 'vuln-mitigation':
+                    out.innerHTML = `[+] [${timestamp}] LOADING COMPENSATING NETWORK RECOVERY MATRIX:
+-----------------------------------------------------------------------------------------
+Vulnerability Profile: Legacy Production Software running unpatched Apache web engine.
+- Mitigating Control 1: Inject custom WAF regex ruleset to drop malicious payloads at perimeter layer.
+- Mitigating Control 2: Restrict endpoint network access list exclusively to trusted administrative subnets.
+[STATUS] Mitigation verified. Virtual Patching state marked as active inside tracking index.`;
+                    break;
